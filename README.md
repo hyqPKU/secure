@@ -5,6 +5,7 @@ project for Information Security class
 ## 选题背景
 - 验证码作用是区分人与机器
 - 合格的验证码应该基于AI-hard型问题设计
+- 保护邮件等网络服务防止被bot滥用的重要手段
 
 ## 产品现况
 ### 12306
