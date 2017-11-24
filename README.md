@@ -39,4 +39,5 @@ project for Information Security class
 
 
 ## 主要思路
-目前考虑到的几个方案见[这里](scheme.md).
+~~目前考虑到的几个方案见[这里](scheme.md).~~
+在老师指导下的新的方案以及可行性分析在[这里](方案可行性.md).
