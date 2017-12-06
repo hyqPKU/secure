@@ -8,13 +8,13 @@ Project for Information Security class
 选择带有语义的图片作为图形验证码的图片，让用户根据提示语选择语义匹配的图片。
 例：
 请选出下图中花瓣为白色、花蕊为黄色的画
-![alt text](https://github.com/hyqPKU/secure/edit/master/captcha.PNG)
+![captcha](/captcha.PNG)
 
 ### 参考文章：
 [Generative Adversarial Text to Image Synthesis](https://arxiv.org/abs/1605.05396)
-![alt text](https://github.com/hyqPKU/secure/edit/master/paper_result.PNG)
+![result](/paper_result.PNG)
 模型：GAN-INT, GANINT-CLS
-![alt text](https://github.com/hyqPKU/secure/edit/master/paper_model.PNG)
+![model](/paper_model.PNG)
 通过输入一段对花颜色、形状的描述，生成符合描述的图片
 
 ### 实现：
