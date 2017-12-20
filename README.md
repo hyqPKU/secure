@@ -41,3 +41,6 @@ project for Information Security class
 ## 主要思路
 ~~目前考虑到的几个方案见[这里](scheme.md).~~
 在孙老师指导下的新的方案以及可行性分析在[这里](方案可行性.md).
+
+前两天看到了一片文章有了新的想法，虽然暂时没时间了，但我肯定还会仔细研究研究的，这个估计才是最靠谱的方向。暂且把引用贴下来。
+> Nguyen A, Yosinski J, Clune J. Deep Neural Networks are Easily Fooled: High Confidence redictions for Unrecognizable Images. In Computer Vision and Pattern Recognition (CVPR ’15), IEEE, 2015.
