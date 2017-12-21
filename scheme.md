@@ -27,8 +27,8 @@
 3. dataset-valid目录，保存经验证合格的图片，按照tag保存对应文件夹
 
 ### 爬虫模块
-1. 根据tag查视频(https://www.bilibili.com/tag/5265682)
-2. 根据视频找视频直链(www.bilibilijj.com好像被限制了，如果这个不行了，有一个叫[you-get](https://github.com/soimort/you-get)的东西可以用下)
+1. 根据tag查视频(比如https://www.bilibili.com/tag/5265682)
+2. 根据视频找视频直链，www.bilibilijj.com好像被限制了，如果这个不行了，有一个叫[you-get](https://github.com/soimort/you-get)的东西可以用下
 
 ### 截图模块
 1. 对一个视频内的图片随机截图
