@@ -11,7 +11,10 @@ app.use(express.static('../dataset'))
 app.set('view engine', 'pug')
 
 app.get('/', (req, res) => {
+    var imgset = {}
     let dirlist = utils.randomArray(fs.readdirSync("../dataset/valid/"), 3)
+    for (let i = 0; i < dirlist.length; i++)
+        imgset["tag"+i] = dirlist[i]
     let pairs = [
         ["../dataset/valid/"+dirlist[0], "valid/"+dirlist[0]+"/", 3],
         ["../dataset/test/"+dirlist[0], "test/"+dirlist[0]+"/", 2],
@@ -20,10 +23,11 @@ app.get('/', (req, res) => {
         ["../dataset/valid/"+dirlist[2], "valid/"+dirlist[2]+"/", 3],
         ["../dataset/test/"+dirlist[2], "test/"+dirlist[2]+"/", 2],
     ]
-    var imgset = {}
     let index = 0
     for (let i = 0; i < pairs.length; i++) {
-        let imglist = utils.randomArray(fs.readdirSync(pairs[i][0]), pairs[i][2])
+        let filelist = fs.readdirSync(pairs[i][0])
+        filelist.pop() //remove num file
+        let imglist = utils.randomArray(filelist, pairs[i][2])
         for (let j = 0; j < imglist.length; j++) {
             imgset["img" + index] = pairs[i][1]+imglist[j]
             index++
@@ -55,22 +59,45 @@ app.post('/result', (req, res) => {
     //     "img14":["Group2","test/tag1/output1_1.jpg"]
     // }
     let success = true
-    if (response["img0"][0] !== response["img1"][0]
-     || response["img0"][0] !== response["img2"][0]) {
-        success=false
+    let valid_pairs = [
+        ["img0", "Group1"], ["img1", "Group1"], ["img2", "Group1"],
+        ["img5", "Group2"], ["img6", "Group2"], ["img7", "Group2"],
+        ["img10","Group3"], ["img11","Group3"], ["img12","Group3"]
+    ]
+    for (let i = 0; i < valid_pairs.length; i++) {
+        if (response[valid_pairs[i][0]][0] !== valid_pairs[i][1])
+            success = false
     }
-    if (response["img5"][0] !== response["img6"][0]
-     || response["img5"][0] !== response["img7"][0]) {
-        success=false
-    }
-    if (response["img10"][0] !== response["img11"][0]
-     || response["img10"][0] !== response["img12"][0]) {
-        success=false
-    }
+    
     let dataset_test = JSON.parse(fs.readFileSync("../dataset/test.json"))
     dataset_test['statistics'][0] += 1
+
     if (success) {
         dataset_test['statistics'][1] += 1
+    }
+    let record_pairs = [
+        ["img0", "Group1"], ["img1", "Group1"], ["img2", "Group1"], 
+        ["img3", "Group1"], ["img4", "Group1"],
+        ["img5", "Group2"], ["img6", "Group2"], ["img7", "Group2"],
+        ["img8", "Group2"], ["img9", "Group2"],
+        ["img10","Group3"], ["img11","Group3"], ["img12","Group3"],
+        ["img13","Group3"], ["img14","Group3"]
+    ]
+    for (let i = 0; i < record_pairs.length; i++) {
+        let imgname = response[record_pairs[i][0]][1]
+        let coll = [0, 0]
+        if (dataset_test[imgname] != null) {
+            coll = dataset_test[imgname]
+        }
+        coll[0]++
+        if (response[record_pairs[i][0]][0] === record_pairs[i][1]) {
+            coll[1]++
+        }
+        dataset_test[imgname] = coll
+    }
+    // The following code was writen for untaged situation.
+    // It's not used for now.
+    if (false) { 
         let pairs = [
             ["img3", "img0"],
             ["img4", "img0"],
@@ -81,7 +108,7 @@ app.post('/result', (req, res) => {
         ]
         for (let x = 0; x < pairs.length; x++) {
             let imgname = response[pairs[x][0]][1]
-            let coll = [0, 0, 0]
+            let coll = [0, 0]
             if (dataset_test[imgname] != null) {
                 coll = dataset_test[imgname]
             }
@@ -108,6 +135,11 @@ app.post('/result', (req, res) => {
     }
     fs.writeFileSync("../dataset/test.json", JSON.stringify(dataset_test))
     res.send({"s":success})
+})
+
+app.post('/statis', (req, res) => {
+    let dataset_test = JSON.parse(fs.readFileSync("../dataset/test.json"))
+    res.send({"total":dataset_test['statistics'][0],"success":dataset_test['statistics'][1]})
 })
 
 var server = app.listen(8888, () => {

@@ -9,10 +9,12 @@ html
     // <script src="main.js"></script> 
     script(src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.js")
     style(type='text/css').
-      .container {width:330px; height:900px;padding:10px;border:1px solid #000000;float:left;}
-      .container_buffer {height:200px; padding:10px; border:1px solid #000000;}
-      .dragableimg {draggable:true; height:90px; width:160px;}
-      .dragedimg {draggable:true; height:180px; width:320px;}
+      body{text-align:center} 
+      #main_container {width:1200px; height:1200px;margin:0 auto;}
+      .container {width:378px; height:100%;padding:10px;border:1px solid #000000;float:left;}
+      .container_buffer {height:180px; padding:10px; border:1px solid #000000;}
+      .dragableimg {draggable:true; height:80px; padding:2px;}
+      .dragedimg {draggable:true; height:180px;padding:5px}
     script.
       function allowDrop(ev) {
           ev.preventDefault()
@@ -26,7 +28,7 @@ html
           while (container.tagName != "DIV") { 
               container = container.parentNode
           }
-          if (container.childNodes.length == 5)  { return }
+        //-   if (container.childNodes.length == 5)  { return }
           let id = ev.dataTransfer.getData("Text")
           if (container.id == "all_image") {
               $("#"+id).removeClass("dragedimg")
@@ -38,27 +40,32 @@ html
           container.appendChild(document.getElementById(id))
       }
   body
-    #all_image.container_buffer(ondrop='drop(event)', ondragover='allowDrop(event)')
-      img#img0.dragableimg(src=img0 ondragstart='drag(event)')
-      img#img1.dragableimg(src=img1 ondragstart='drag(event)')
-      img#img2.dragableimg(src=img2 ondragstart='drag(event)')
-      img#img3.dragableimg(src=img3 ondragstart='drag(event)')
-      img#img4.dragableimg(src=img4 ondragstart='drag(event)')
-      img#img5.dragableimg(src=img5 ondragstart='drag(event)')
-      img#img6.dragableimg(src=img6 ondragstart='drag(event)')
-      img#img7.dragableimg(src=img7 ondragstart='drag(event)')
-      img#img8.dragableimg(src=img8 ondragstart='drag(event)')
-      img#img9.dragableimg(src=img9 ondragstart='drag(event)')
-      img#img10.dragableimg(src=img10 ondragstart='drag(event)')
-      img#img11.dragableimg(src=img11 ondragstart='drag(event)')
-      img#img12.dragableimg(src=img12 ondragstart='drag(event)')
-      img#img13.dragableimg(src=img13 ondragstart='drag(event)')
-      img#img14.dragableimg(src=img14 ondragstart='drag(event)')
-     
-    #Group1.container(ondrop='drop(event)', ondragover='allowDrop(event)')
-    #Group2.container(ondrop='drop(event)', ondragover='allowDrop(event)')
-    #Group3.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+    p 将如下十五张张图片按照标签分为三组，每组五张
     button#submitbutton(type='button') 验证
+    #main_container
+      #all_image.container_buffer(ondrop='drop(event)', ondragover='allowDrop(event)')
+        img#img0.dragableimg(src=img0 ondragstart='drag(event)')
+        img#img1.dragableimg(src=img1 ondragstart='drag(event)')
+        img#img2.dragableimg(src=img2 ondragstart='drag(event)')
+        img#img3.dragableimg(src=img3 ondragstart='drag(event)')
+        img#img4.dragableimg(src=img4 ondragstart='drag(event)')
+        img#img5.dragableimg(src=img5 ondragstart='drag(event)')
+        img#img6.dragableimg(src=img6 ondragstart='drag(event)')
+        img#img7.dragableimg(src=img7 ondragstart='drag(event)')
+        img#img8.dragableimg(src=img8 ondragstart='drag(event)')
+        img#img9.dragableimg(src=img9 ondragstart='drag(event)')
+        img#img10.dragableimg(src=img10 ondragstart='drag(event)')
+        img#img11.dragableimg(src=img11 ondragstart='drag(event)')
+        img#img12.dragableimg(src=img12 ondragstart='drag(event)')
+        img#img13.dragableimg(src=img13 ondragstart='drag(event)')
+        img#img14.dragableimg(src=img14 ondragstart='drag(event)')
+       
+      #Group1.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+        p #{tag0}
+      #Group2.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+        p #{tag1}
+      #Group3.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+        p #{tag2}
 
   script.
     var allimage = $("#all_image").children()
@@ -100,7 +107,10 @@ html
                 form.submit()
             })
             $("#showstatis").click((ev) => {
-                alert("还没做")
+                $.post("/statis", null, (data, status) => {
+                    $("#all_image").append($("<p></p>").text("Total:"+data['total']))
+                    $("#all_image").append($("<p></p>").text("Success:"+data['success']))
+                })
             })
         })
     })
