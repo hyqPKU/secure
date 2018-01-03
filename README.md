@@ -44,3 +44,37 @@ project for Information Security class
 
 前两天看到了一片文章有了新的想法，虽然暂时没时间了，但我肯定还会仔细研究研究的，这个估计才是最靠谱的方向。暂且把引用贴下来。
 > Nguyen A, Yosinski J, Clune J. Deep Neural Networks are Easily Fooled: High Confidence redictions for Unrecognizable Images. In Computer Vision and Pattern Recognition (CVPR ’15), IEEE, 2015.
+
+语义图形验证码 (deprecated)
+=============
+
+### 思路
+
+选择带有语义的图片作为图形验证码的图片，让用户根据提示语选择语义匹配的图片。
+例：
+请选出下图中花瓣为白色、花蕊为黄色的花
+
+![captcha](pics/captcha.PNG)
+
+
+### 参考文章
+
+[Generative Adversarial Text to Image Synthesis](https://arxiv.org/abs/1605.05396)
+
+![result](pics/paper_result.PNG)
+
+
+### 模型 GAN-INT, GANINT-CLS
+
+![model](pics/paper_model.PNG)
+
+输入一段对花颜色、形状的描述，生成符合描述的图片
+
+
+### 实现：
+
+[text-to-image](https://github.com/paarthneekhara/text-to-image)
+
+### 可行性分析：
+
+选择该类型验证码的主要难点在于寻找大量合适的图片，使用GAN生成模型可以解决该问题，通过输入自然语言生成大量可靠的图片，作为图形验证码的素材。
