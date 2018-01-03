@@ -1,0 +1,116 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title Captcha
+    meta(name='viewport', content='width=device-width,initial-scale=1')
+    // <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> 
+    // <script src="main.js"></script> 
+    script(src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.js")
+    style(type='text/css').
+      body{text-align:center} 
+      #main_container {width:1200px; height:1200px;margin:0 auto;}
+      .container {width:378px; height:100%;padding:10px;border:1px solid #000000;float:left;}
+      .container_buffer {height:180px; padding:10px; border:1px solid #000000;}
+      .dragableimg {draggable:true; height:80px; padding:2px;}
+      .dragedimg {draggable:true; height:180px;padding:5px}
+    script.
+      function allowDrop(ev) {
+          ev.preventDefault()
+      }
+      function drag(ev) {
+          ev.dataTransfer.setData("Text", ev.target.id)
+      }
+      function drop(ev) {
+          ev.preventDefault()
+          var container = ev.target
+          while (container.tagName != "DIV") { 
+              container = container.parentNode
+          }
+        //-   if (container.childNodes.length == 5)  { return }
+          let id = ev.dataTransfer.getData("Text")
+          if (container.id == "all_image") {
+              $("#"+id).removeClass("dragedimg")
+              $("#"+id).addClass("dragableimg")
+          } else {
+              $("#"+id).removeClass("dragableimg")
+              $("#"+id).addClass("dragedimg")
+          }
+          container.appendChild(document.getElementById(id))
+      }
+  body
+    p 将如下十五张张图片按照标签分为三组，每组五张
+    button#submitbutton(type='button') 验证
+    #main_container
+      #all_image.container_buffer(ondrop='drop(event)', ondragover='allowDrop(event)')
+        img#img0.dragableimg(src=img0 ondragstart='drag(event)')
+        img#img1.dragableimg(src=img1 ondragstart='drag(event)')
+        img#img2.dragableimg(src=img2 ondragstart='drag(event)')
+        img#img3.dragableimg(src=img3 ondragstart='drag(event)')
+        img#img4.dragableimg(src=img4 ondragstart='drag(event)')
+        img#img5.dragableimg(src=img5 ondragstart='drag(event)')
+        img#img6.dragableimg(src=img6 ondragstart='drag(event)')
+        img#img7.dragableimg(src=img7 ondragstart='drag(event)')
+        img#img8.dragableimg(src=img8 ondragstart='drag(event)')
+        img#img9.dragableimg(src=img9 ondragstart='drag(event)')
+        img#img10.dragableimg(src=img10 ondragstart='drag(event)')
+        img#img11.dragableimg(src=img11 ondragstart='drag(event)')
+        img#img12.dragableimg(src=img12 ondragstart='drag(event)')
+        img#img13.dragableimg(src=img13 ondragstart='drag(event)')
+        img#img14.dragableimg(src=img14 ondragstart='drag(event)')
+       
+      #Group1.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+        p #{tag0}
+      #Group2.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+        p #{tag1}
+      #Group3.container(ondrop='drop(event)', ondragover='allowDrop(event)')
+        p #{tag2}
+
+  script.
+    var allimage = $("#all_image").children()
+    $("#all_image").empty()
+    for (let i = 15; i > 0; i--) {
+        let index = Math.floor(Math.random() * i)
+        $("#all_image").append(allimage[index])
+        allimage.splice(index,1)
+    }
+    $("button#submitbutton").click((ev) => {
+        if ($("#all_image").children().length !== 0) {
+            alert("还有图片未完成分组")
+            return
+        }
+        let data = {}
+        let groups = ["Group1", "Group2", "Group3"]
+        for (let i = 0; i < groups.length; i++) {
+            let imgs = $("#"+groups[i]).children()
+            for (let j = 0; j < imgs.length; j++) {
+                data[imgs[j].getAttribute("id")] = [groups[i], imgs[j].getAttribute("src")]
+            }
+        }
+        $.post("/result", data, (data, status) => {
+            $("#all_image").empty()
+            if (data['s']) {
+                $("#all_image").append($("<p></p>").text("验证成功"))
+            } else {
+                $("#all_image").append($("<p></p>").text("验证失败"))
+            }
+            $("#all_image").append($("<button></button>").attr("id", "recap"))
+            $("#all_image").append($("<button></button>").attr("id", "showstatis"))
+            $("#recap").text("重新验证")
+            $("#showstatis").text("显示统计")
+            $("#recap").click((ev) => {
+                var form = document.createElement("form")
+                form.setAttribute("method", "get")
+                form.setAttribute("action", "/")
+                $("body").append(form)
+                form.submit()
+            })
+            $("#showstatis").click((ev) => {
+                $.post("/statis", null, (data, status) => {
+                    $("#all_image").append($("<p></p>").text("Total:"+data['total']))
+                    $("#all_image").append($("<p></p>").text("Success:"+data['success']))
+                })
+            })
+        })
+    })

@@ -1,0 +1,7 @@
+ExtractImg/*.jpg
+ExtractImg/*.png
+web/node_modules
+dataset/source/*
+dataset/test/*
+dataset/valid/*
+dataset
